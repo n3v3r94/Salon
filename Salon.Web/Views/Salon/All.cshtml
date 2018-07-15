@@ -1,0 +1,34 @@
+﻿@model IEnumerable<Salons>
+
+@{
+    ViewData["Title"] = "All";
+}
+
+<h2>All Salon</h2>
+
+<a asp-controller="Salon" asp-action="Create" class="btn btn-primary" role="button"> Create Salon</a>
+<table class="table table-condensed">
+    <thead>
+        <tr>
+            <th>City</th>
+            <th>Coutry</th>
+            <th>Salon Name</th>
+            <th>Admin</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var item in @Model)
+        {
+        <tr>
+            <th>@item.City</th>
+            <th>@item.Country</th>
+            <th>@item.Name</th>
+            <th><a asp-controller="Salon" asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary" role="button"> Edit</a></th>
+            <th><a asp-controller="Salon" asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger" role="button"> Delete</a></th>
+           
+        </tr>
+        }
+    </tbody>
+
+</table>
