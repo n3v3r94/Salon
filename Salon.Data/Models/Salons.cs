@@ -21,7 +21,12 @@ namespace Salon.Data.Models
         [StringLength(100)]
         public string Country { get; set; }
 
-        public List<Product> Products { get; set; }
+        public virtual List<Product> Products { get; set; } = new List<Product>();
+
+        [Timestamp]
+        public byte[] RowVersion { get; set; }
+
+
 
 
     }

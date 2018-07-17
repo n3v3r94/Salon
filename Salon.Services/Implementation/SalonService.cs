@@ -19,20 +19,19 @@ namespace Salon.Services.Implementation
             this.db = db;
         }
 
-        public IEnumerable<Salons> AllSalon()
+        public IEnumerable<SalonViewModel> AllSalon()
         {
-            var salon = this.db.Salons.ToList();
-            return salon;
 
-            //modela ot bazata e sashtiq kato view modela i nqma smisal ot dolniq Kod :D
-           // return salon.Select(s => new SalonModel
-           // {
-           //     Name = s.Name,
-           //     City = s.City,
-           //     Country = s.Country,
-           //     Id = s.Id,
-           //     Products = s.Products
-           //  }).ToList(); ;
+            var salon = db.Salons;
+           //modela ot bazata e sashtiq kato view modela
+           return salon.Select(s => new SalonViewModel
+           {
+               Name = s.Name,
+               City = s.City,
+               Country = s.Country,
+               Id = s.Id,
+               Products = s.Products
+            }).ToList(); ;
         }
 
         public void Create(Salons salon)
@@ -58,7 +57,6 @@ namespace Salon.Services.Implementation
                     salonFromDb.Name = salon.Name;
                     salonFromDb.City = salon.City;
                     salonFromDb.Country = salon.Country;
-                    //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                     salon.Products = salon.Products;
 
                     db.SaveChanges();
@@ -86,9 +84,43 @@ namespace Salon.Services.Implementation
 
         public Salons Details(int id)
         {
-            var salon = db.Salons.SingleOrDefault(s => s.Id == id);
+            var salon = db.Salons.Include("Products").SingleOrDefault(s => s.Id == id);
 
             return (salon);
+        }
+
+
+        public void AddSalon(Product product)
+        {
+            var result = this.db.Products;
+
+            result.Add(product);
+            db.SaveChanges();
+
+        }
+
+        public List<SearchByProductViewModel> SearchProduct(string product)
+        {
+            var result = this.db.Salons.Include(p => p.Products);
+
+            List<SearchByProductViewModel> searchByProducts = new List<SearchByProductViewModel>(); ;
+            foreach (var sal in result)
+            {
+                foreach (var currrentProduct in sal.Products)
+                {
+                    if (currrentProduct.Name == product)
+                    {
+                        var prod = new SearchByProductViewModel();
+                        prod.Id = sal.Id;
+                        prod.SalonName = sal.Name;
+                        prod.ProductName = currrentProduct.Name;
+                        searchByProducts.Add(prod);
+                     }
+                }
+
+            }
+
+            return searchByProducts;
         }
 
     }

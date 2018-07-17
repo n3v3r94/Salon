@@ -13,9 +13,12 @@ namespace Salon.Web.Controllers
         //za da raboti trqbva da registrame service v startup 
         private readonly ISalonServices salon;
 
+       // private readonly IProductServices product;
+
         public SalonController(ISalonServices salon)
         {
             this.salon = salon;
+           
         }
 
         public IActionResult All()
@@ -86,6 +89,30 @@ namespace Salon.Web.Controllers
 
             return View(currentSalon);
         }
+
+        public IActionResult AddProduct()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult AddProduct(Product product)
+        {
+            this.salon.AddSalon(product);
+
+            return RedirectToAction(nameof(All));
+        }
+
+        public IActionResult SearchByProduct(string product)
+        {
+            var result = this.salon.SearchProduct(product);
+
+            return View(result);
+        }
+
+
+
+
     }
 
   

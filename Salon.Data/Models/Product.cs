@@ -23,5 +23,8 @@ namespace Salon.Data.Models
         public int SalonId { get; set; }
 
         public Salons Salon { get; set; }
+
+        [Timestamp]
+        public byte[] RowVersion { get; set; }
     }
 }

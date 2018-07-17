@@ -22,6 +22,7 @@ namespace Salon.Web.Controllers
     {
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
+        private readonly RoleManager<IdentityRole> roleManager;
         private readonly IEmailSender _emailSender;
         private readonly ILogger _logger;
 
@@ -29,11 +30,13 @@ namespace Salon.Web.Controllers
             UserManager<User> userManager,
             SignInManager<User> signInManager,
             IEmailSender emailSender,
-            ILogger<AccountController> logger)
+            ILogger<AccountController> logger,
+            RoleManager<IdentityRole> roleManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _emailSender = emailSender;
+            this.roleManager = roleManager;
             _logger = logger;
         }
 
@@ -221,7 +224,17 @@ namespace Salon.Web.Controllers
             if (ModelState.IsValid)
             {
                 var user = new User { UserName = model.Email, Email = model.Email };
+                var roleExist = await roleManager.RoleExistsAsync(model.Role);
+
+            
+                
+              
                 var result = await _userManager.CreateAsync(user, model.Password);
+                if (roleExist)
+                {
+                    await _userManager.AddToRoleAsync(user, model.Role);
+                }
+
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");

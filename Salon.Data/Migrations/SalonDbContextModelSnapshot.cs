@@ -142,13 +142,17 @@ namespace Salon.Data.Migrations
                     b.Property<string>("Price")
                         .IsRequired();
 
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate();
+
                     b.Property<int>("SalonId");
 
                     b.HasKey("Id");
 
                     b.HasIndex("SalonId");
 
-                    b.ToTable("Product");
+                    b.ToTable("Products");
                 });
 
             modelBuilder.Entity("Salon.Data.Models.Salons", b =>
@@ -167,6 +171,10 @@ namespace Salon.Data.Migrations
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100);
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate();
 
                     b.HasKey("Id");
 

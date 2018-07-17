@@ -27,6 +27,10 @@ namespace Salon.Data
 
             builder.Entity<Salons>().HasMany(p => p.Products).WithOne(s => s.Salon).HasForeignKey(fk => fk.SalonId);
 
+            builder.Entity<Salons>().Property(s => s.RowVersion).IsConcurrencyToken();
+
+            builder.Entity<Product>().Property(s => s.RowVersion).IsConcurrencyToken();
+
             base.OnModelCreating(builder);
            
         }
