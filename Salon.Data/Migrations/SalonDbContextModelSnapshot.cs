@@ -155,6 +155,19 @@ namespace Salon.Data.Migrations
                     b.ToTable("Products");
                 });
 
+            modelBuilder.Entity("Salon.Data.Models.ProductWorker", b =>
+                {
+                    b.Property<int>("ProductId");
+
+                    b.Property<string>("UserId");
+
+                    b.HasKey("ProductId", "UserId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("ProductWorker");
+                });
+
             modelBuilder.Entity("Salon.Data.Models.Salons", b =>
                 {
                     b.Property<int>("Id")
@@ -176,7 +189,11 @@ namespace Salon.Data.Migrations
                         .IsConcurrencyToken()
                         .ValueGeneratedOnAddOrUpdate();
 
+                    b.Property<string>("UserId");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Salons");
                 });
@@ -283,6 +300,26 @@ namespace Salon.Data.Migrations
                         .WithMany("Products")
                         .HasForeignKey("SalonId")
                         .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Salon.Data.Models.ProductWorker", b =>
+                {
+                    b.HasOne("Salon.Data.Models.Product", "Product")
+                        .WithMany("User")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Salon.Data.Models.User", "User")
+                        .WithMany("Products")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Salon.Data.Models.Salons", b =>
+                {
+                    b.HasOne("Salon.Data.Models.User", "User")
+                        .WithMany("Salon")
+                        .HasForeignKey("UserId");
                 });
 #pragma warning restore 612, 618
         }

@@ -211,6 +211,7 @@ namespace Salon.Web.Controllers
         [AllowAnonymous]
         public IActionResult Register(string returnUrl = null)
         {
+
             ViewData["ReturnUrl"] = returnUrl;
             return View();
         }
@@ -230,7 +231,14 @@ namespace Salon.Web.Controllers
                 
               
                 var result = await _userManager.CreateAsync(user, model.Password);
+
+              //  var role = new IdentityRole();
+              //
+              //  role.Name = "Worker";
+              //  await roleManager.CreateAsync(role);
+
                 if (roleExist)
+
                 {
                     await _userManager.AddToRoleAsync(user, model.Role);
                 }

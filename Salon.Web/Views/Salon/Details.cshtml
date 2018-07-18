@@ -8,13 +8,13 @@
 
 <h2>@Model.Name Details</h2>
 
-<a asp-controller="Salon" asp-action="AddProduct"  class="btn btn-primary" role="button"> Add Product</a>
+
 
 @foreach(var item in Model.Products)
 {
     <ul>
         <li>
-            <a asp-controller="Salon" asp-action="Edit" >  @item.Name</a>
+              @item.Name
         </li>
     </ul>
 

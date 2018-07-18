@@ -9,5 +9,8 @@ namespace Salon.Data.Models
     
     public class User : IdentityUser
     {
+        public virtual List<Salons> Salon { get; set; }
+
+        public virtual List<ProductWorker>  Products { get; set; }
     }
 }

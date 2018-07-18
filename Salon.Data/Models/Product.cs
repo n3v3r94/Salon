@@ -26,5 +26,7 @@ namespace Salon.Data.Models
 
         [Timestamp]
         public byte[] RowVersion { get; set; }
+
+        public List<ProductWorker> User { get; set; }
     }
 }

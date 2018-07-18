@@ -26,6 +26,6 @@ namespace Salon.Web.Models.AccountViewModels
         public string ConfirmPassword { get; set; }
 
         [Required]
-      public string Role { get; set; } 
+         public string Role { get; set; }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Salon.Data.Models;
 using Salon.Services;
 using System;
@@ -13,7 +14,7 @@ namespace Salon.Web.Controllers
         //za da raboti trqbva da registrame service v startup 
         private readonly ISalonServices salon;
 
-       // private readonly IProductServices product;
+       
 
         public SalonController(ISalonServices salon)
         {
@@ -27,6 +28,7 @@ namespace Salon.Web.Controllers
             return View(salon.AllSalon());
         }
 
+        [Authorize(Roles = "Salon")]
         public IActionResult Create ()
         {
             
@@ -34,16 +36,21 @@ namespace Salon.Web.Controllers
         }
 
         [HttpPost]
+        [AutoValidateAntiforgeryToken]
+        [Authorize(Roles = "Salon")]
         public IActionResult Create(Salons salon)
         {
             if (ModelState.IsValid)
             {
-                this.salon.Create(salon);
+
+                var userName = HttpContext.User.Identity.Name;
+                this.salon.Create(salon , userName);
                 return RedirectToAction(nameof(All));
             }
             return View(salon);
         }
 
+        [Authorize(Roles = "Salon")]
         public IActionResult Edit(int  id )
         {
 
@@ -52,6 +59,8 @@ namespace Salon.Web.Controllers
         }
 
         [HttpPost]
+        [AutoValidateAntiforgeryToken]
+        [Authorize(Roles = "Salon")]
         public IActionResult Edit(Salons salons, int id)
         {
 
@@ -65,6 +74,7 @@ namespace Salon.Web.Controllers
             return View();
         }
 
+        [Authorize(Roles = "Salon")]
         public IActionResult Delete(int id)
         {
 
@@ -74,6 +84,8 @@ namespace Salon.Web.Controllers
         }
 
         [HttpPost]
+        [AutoValidateAntiforgeryToken]
+        [Authorize(Roles = "Salon")]
         public IActionResult Delete(int id, string str)
         {
 
@@ -96,9 +108,11 @@ namespace Salon.Web.Controllers
         }
 
         [HttpPost]
+        [AutoValidateAntiforgeryToken]
+        [Authorize(Roles = "Salon")]
         public IActionResult AddProduct(Product product)
         {
-            this.salon.AddSalon(product);
+            this.salon.AddProduct(product);
 
             return RedirectToAction(nameof(All));
         }
@@ -108,6 +122,14 @@ namespace Salon.Web.Controllers
             var result = this.salon.SearchProduct(product);
 
             return View(result);
+        }
+
+        [Authorize(Roles = "Salon")]
+        public IActionResult MySalon()
+        {
+            var userName = HttpContext.User.Identity.Name;
+
+            return View(this.salon.MySalons(userName));
         }
 
 

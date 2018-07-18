@@ -33,7 +33,10 @@
                     <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
                     <li><a asp-area="" asp-controller="Salon" asp-action="All">All Salons</a></li>
                     <li><a asp-area="" asp-controller="Administrator" asp-action="AllUsers">All Users</a></li>
-
+                    @if (User.IsInRole("Salon"))
+                    {
+                        <li><a asp-area="" asp-controller="Salon" asp-action="MySalon">My Salon</a></li>
+                     }
                 </ul>
                 @await Html.PartialAsync("_LoginPartial")
             </div>
