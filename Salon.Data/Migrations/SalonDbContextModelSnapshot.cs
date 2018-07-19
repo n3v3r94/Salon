@@ -161,7 +161,11 @@ namespace Salon.Data.Migrations
 
                     b.Property<string>("UserId");
 
+                    b.Property<int?>("SalonsId");
+
                     b.HasKey("ProductId", "UserId");
+
+                    b.HasIndex("SalonsId");
 
                     b.HasIndex("UserId");
 
@@ -305,9 +309,13 @@ namespace Salon.Data.Migrations
             modelBuilder.Entity("Salon.Data.Models.ProductWorker", b =>
                 {
                     b.HasOne("Salon.Data.Models.Product", "Product")
-                        .WithMany("User")
+                        .WithMany("SalonWorkers")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Salon.Data.Models.Salons")
+                        .WithMany("ProductsWorker")
+                        .HasForeignKey("SalonsId");
 
                     b.HasOne("Salon.Data.Models.User", "User")
                         .WithMany("Products")

@@ -30,6 +30,8 @@ namespace Salon.Services
 
         List<SearchByProductViewModel> SearchProduct(string product);
 
+        
+
         void Book();
     }
 }

@@ -39,7 +39,7 @@ namespace Salon.Data
 
             builder.Entity<ProductWorker>().HasOne(u => u.User).WithMany(p => p.Products).HasForeignKey(f => f.UserId);
 
-            builder.Entity<ProductWorker>().HasOne(p => p.Product).WithMany(u => u.User).HasForeignKey(f => f.ProductId);
+            builder.Entity<ProductWorker>().HasOne(p => p.Product).WithMany(u => u.SalonWorkers).HasForeignKey(f => f.ProductId);
 
             base.OnModelCreating(builder);
            
