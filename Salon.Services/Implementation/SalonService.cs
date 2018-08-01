@@ -13,6 +13,9 @@ namespace Salon.Services.Implementation
     using Microsoft.AspNetCore.Identity;
     using System.Security.Claims;
     using Microsoft.AspNetCore.Http;
+    using Microsoft.AspNetCore.Mvc.Rendering;
+
+    
 
     public class SalonService : ISalonServices
     {
@@ -30,7 +33,7 @@ namespace Salon.Services.Implementation
         {
 
             var salon = db.Salons;
-            //modela ot bazata e sashtiq kato view modela
+          
             return salon.Select(s => new SalonViewModel
             {
                 Name = s.Name,
@@ -97,11 +100,19 @@ namespace Salon.Services.Implementation
         }
 
 
-        public void AddProduct(Product product)
+        public void AddProduct(AddProductView product, int id)
         {
-            var result = this.db.Products;
+            var result = this.db.Salons.Include(p => p.Products).SingleOrDefault(s => s.Id == id);
 
-            result.Add(product);
+            Product tempProdduct = new Product()
+            {
+                Name = product.Name,
+                Price = product.Price,
+                Discount = product.Discount
+            };
+
+            result.Products.Add(tempProdduct);
+           
             db.SaveChanges();
 
         }
@@ -142,7 +153,6 @@ namespace Salon.Services.Implementation
                 Products = s.Products,
                 City = s.City,
                 Country = s.Country
-                
             });
         }
 
@@ -150,5 +160,57 @@ namespace Salon.Services.Implementation
         {
 
         }
+
+
+        //Anonymouse
+        public ProductWithWorkers GetProductWithWorkers(int id)
+        {
+            //var product = this.db.Products.Include(s => s.Workers).Where(p => p.Id == id);
+            
+            ProductWithWorkers workers = new ProductWithWorkers();
+
+            var productVersion2 = this.db.WorkerProduct.Include(p => p.Product).ThenInclude(w =>w.Workers).Where(p => p.Product.Id == id);
+
+            foreach (var prod in productVersion2)
+            {
+                //TO DO fix override name
+                workers.ProductName = prod.Product.Name;
+                
+                var worker = this.db.Worker.SingleOrDefault(w => w.Id == prod.WorkerId);
+                var user = userManager.FindByIdAsync(worker.userId).Result;
+                var workerName = user.Email;
+                workers.Workers.Add(workerName);
+                workers.selectWorker.Add(new SelectListItem
+                {
+                    Value = workerName,
+                    Text = workerName
+                });
+            }
+
+           // foreach (var worker in workers)
+           // {
+           // 
+           //     var user = userManager.FindByIdAsync(worker.WorkerName).Result;
+           // 
+           //     ProductWithWorkers productWithWorkers = new ProductWithWorkers();
+           //     productWithWorkers.ProductName = worker.ProductName;
+           //     productWithWorkers.Workers.Add(user.Email);
+           //     //TO DO optimize fix bug wih product name
+           //     allWorkers.Add(productWithWorkers);
+           //         
+           // }
+           //
+
+            return workers;
+        }
+
+        //Salon Role
+        public Product ProductDetails(int id)
+        {
+            var product = this.db.Products.SingleOrDefault(p => p.Id == id);
+
+            return product;
+        }
+
     }
 }

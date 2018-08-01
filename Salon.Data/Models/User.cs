@@ -11,6 +11,6 @@ namespace Salon.Data.Models
     {
         public virtual List<Salons> Salon { get; set; }
 
-        public virtual List<ProductWorker>  Products { get; set; }
+     
     }
 }

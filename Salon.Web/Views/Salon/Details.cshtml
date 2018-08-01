@@ -8,16 +8,35 @@
 
 <h2>@Model.Name Details</h2>
 
+<hr />
+<a asp-controller="Salon" asp-action="AddProduct" asp-route-id="@Model.Id" class="btn btn-primary" role="button">Add Product</a>
+<hr />
+<table class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th>Product name</th>
+            <th>Product Price</th>
+            <th>Product Discount</th>
+            <th>Book</th>
+        </tr>
+    </thead>
 
 
-@foreach(var item in Model.Products)
-{
-    <ul>
-        <li>
-              @item.Name
-        </li>
-    </ul>
+    <tbody>
+        @foreach (var item in Model.Products)
+        {
+            <tr>
 
-}
+                <th>
+                    @item.Name 
+                </th>
+                <th>@item.Price</th>
+                <th>@item.Discount</th>
+                <th><a asp-controller="Salon" asp-action="ProductWithWorkers" asp-route-id="@item.Id" class="btn btn-primary" role="button">Book</a></th>
 
+
+            </tr>
+        }
+    </tbody>
+</table>
 

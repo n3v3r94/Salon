@@ -19,9 +19,11 @@ namespace Salon.Data
         }
 
         public DbSet<Salons> Salons { get; set; }
-
         public DbSet<Product> Products { get; set; }
         public DbSet<User> DbUsers { get; set; }
+        public DbSet<WorkerProduct> WorkerProduct { get; set; }
+        public DbSet<Worker> Worker { get; set; }
+
         
 
         protected override void OnModelCreating(ModelBuilder builder)
@@ -35,11 +37,11 @@ namespace Salon.Data
 
             builder.Entity<Product>().Property(s => s.RowVersion).IsConcurrencyToken();
 
-            builder.Entity<ProductWorker>().HasKey(pw => new { pw.ProductId, pw.UserId });
 
-            builder.Entity<ProductWorker>().HasOne(u => u.User).WithMany(p => p.Products).HasForeignKey(f => f.UserId);
+            builder.Entity<WorkerProduct>().HasKey(pw => new { pw.ProductId, pw.WorkerId });
 
-            builder.Entity<ProductWorker>().HasOne(p => p.Product).WithMany(u => u.SalonWorkers).HasForeignKey(f => f.ProductId);
+            builder.Entity<WorkerProduct>().HasOne(w => w.Worker).WithMany(p => p.Products).HasForeignKey(f => f.WorkerId);
+            builder.Entity<WorkerProduct>().HasOne(p => p.Product).WithMany(w => w.Workers).HasForeignKey(f => f.ProductId);
 
             base.OnModelCreating(builder);
            

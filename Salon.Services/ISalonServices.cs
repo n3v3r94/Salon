@@ -24,12 +24,15 @@ namespace Salon.Services
 
         Salons Details(int id);
 
-        void AddProduct(Product product);
+        void AddProduct(AddProductView product, int id);
 
         IEnumerable<SalonViewModel> MySalons(string name );
 
         List<SearchByProductViewModel> SearchProduct(string product);
 
+        ProductWithWorkers GetProductWithWorkers(int id);
+
+        Product ProductDetails(int id);
         
 
         void Book();

@@ -30,8 +30,7 @@ namespace Salon.Data.Models
 
         public User User { get; set; }
 
-        public List<ProductWorker> ProductsWorker { get; set; }
-
+    
 
     }
 }

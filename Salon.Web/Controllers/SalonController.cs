@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Salon.Data.Models;
 using Salon.Services;
+using Salon.Services.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,20 +13,21 @@ namespace Salon.Web.Controllers
     public class SalonController : Controller
     {
         //za da raboti trqbva da registrame service v startup 
-        private readonly ISalonServices salon;
-
-       
+        private readonly ISalonServices salonSvc;
 
         public SalonController(ISalonServices salon)
         {
-            this.salon = salon;
+            this.salonSvc = salon;
            
         }
 
+
+
+        [HttpGet]
         public IActionResult All()
         {
 
-            return View(salon.AllSalon());
+            return View(salonSvc.AllSalon());
         }
 
         [Authorize(Roles = "Salon")]
@@ -44,7 +46,7 @@ namespace Salon.Web.Controllers
             {
 
                 var userName = HttpContext.User.Identity.Name;
-                this.salon.Create(salon , userName);
+                this.salonSvc.Create(salon , userName);
                 return RedirectToAction(nameof(All));
             }
             return View(salon);
@@ -54,7 +56,7 @@ namespace Salon.Web.Controllers
         public IActionResult Edit(int  id )
         {
 
-            var currentSalon = this.salon.FindSalon(id);
+            var currentSalon = this.salonSvc.FindSalon(id);
             return View(currentSalon);
         }
 
@@ -67,7 +69,7 @@ namespace Salon.Web.Controllers
             if (ModelState.IsValid)
             {
 
-                salon.Edit(salons, id);
+                salonSvc.Edit(salons, id);
                 return RedirectToAction(nameof(All));
             }
 
@@ -78,7 +80,7 @@ namespace Salon.Web.Controllers
         public IActionResult Delete(int id)
         {
 
-            var currentSalon = this.salon.FindSalon(id);
+            var currentSalon = this.salonSvc.FindSalon(id);
 
             return View(currentSalon);
         }
@@ -89,37 +91,39 @@ namespace Salon.Web.Controllers
         public IActionResult Delete(int id, string str)
         {
 
-            this.salon.Delete(id,str);
+            this.salonSvc.Delete(id,str);
             
 
             return RedirectToAction(nameof(All));
         }
-
+        [HttpGet]
         public IActionResult Details(int id)
         {
-            var currentSalon = this.salon.Details(id);
+            var currentSalon = this.salonSvc.Details(id);
 
             return View(currentSalon);
         }
 
-        public IActionResult AddProduct()
+        [HttpGet]
+        public IActionResult AddProduct(int id)
         {
-            return View();
+            return View(new AddProductView () { SalonId = id });
         }
 
         [HttpPost]
         [AutoValidateAntiforgeryToken]
         [Authorize(Roles = "Salon")]
-        public IActionResult AddProduct(Product product)
+        public IActionResult AddProduct(AddProductView product,int id)
         {
-            this.salon.AddProduct(product);
+            this.salonSvc.AddProduct(product, id);
 
-            return RedirectToAction(nameof(All));
+            return RedirectToAction(nameof(MySalon));
         }
 
+        [HttpGet]
         public IActionResult SearchByProduct(string product)
         {
-            var result = this.salon.SearchProduct(product);
+            var result = this.salonSvc.SearchProduct(product);
 
             return View(result);
         }
@@ -129,10 +133,20 @@ namespace Salon.Web.Controllers
         {
             var userName = HttpContext.User.Identity.Name;
 
-            return View(this.salon.MySalons(userName));
+            return View(this.salonSvc.MySalons(userName));
         }
 
+        [HttpGet]
+        public IActionResult ProductWithWorkers(int id)
+        {
+            return View(this.salonSvc.GetProductWithWorkers(id));
+        }
 
+        public IActionResult ProductDetails(int id)
+        {
+            return View(this.salonSvc.ProductDetails(id));
+        }
+         
 
 
     }

@@ -155,23 +155,6 @@ namespace Salon.Data.Migrations
                     b.ToTable("Products");
                 });
 
-            modelBuilder.Entity("Salon.Data.Models.ProductWorker", b =>
-                {
-                    b.Property<int>("ProductId");
-
-                    b.Property<string>("UserId");
-
-                    b.Property<int?>("SalonsId");
-
-                    b.HasKey("ProductId", "UserId");
-
-                    b.HasIndex("SalonsId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("ProductWorker");
-                });
-
             modelBuilder.Entity("Salon.Data.Models.Salons", b =>
                 {
                     b.Property<int>("Id")
@@ -253,6 +236,31 @@ namespace Salon.Data.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
+            modelBuilder.Entity("Salon.Data.Models.Worker", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("userId");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Worker");
+                });
+
+            modelBuilder.Entity("Salon.Data.Models.WorkerProduct", b =>
+                {
+                    b.Property<int>("ProductId");
+
+                    b.Property<int>("WorkerId");
+
+                    b.HasKey("ProductId", "WorkerId");
+
+                    b.HasIndex("WorkerId");
+
+                    b.ToTable("WorkerProduct");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole")
@@ -306,28 +314,24 @@ namespace Salon.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("Salon.Data.Models.ProductWorker", b =>
-                {
-                    b.HasOne("Salon.Data.Models.Product", "Product")
-                        .WithMany("SalonWorkers")
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("Salon.Data.Models.Salons")
-                        .WithMany("ProductsWorker")
-                        .HasForeignKey("SalonsId");
-
-                    b.HasOne("Salon.Data.Models.User", "User")
-                        .WithMany("Products")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
             modelBuilder.Entity("Salon.Data.Models.Salons", b =>
                 {
                     b.HasOne("Salon.Data.Models.User", "User")
                         .WithMany("Salon")
                         .HasForeignKey("UserId");
+                });
+
+            modelBuilder.Entity("Salon.Data.Models.WorkerProduct", b =>
+                {
+                    b.HasOne("Salon.Data.Models.Product", "Product")
+                        .WithMany("Workers")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Salon.Data.Models.Worker", "Worker")
+                        .WithMany("Products")
+                        .HasForeignKey("WorkerId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
         }

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Salon.Data.Models
 {
-  public  class Product
+    public class Product
     {
         public int Id { get; set; }
 
@@ -17,7 +17,7 @@ namespace Salon.Data.Models
         public string Price { get; set; }
 
         [Required]
-        [Range(0,100)]
+        [Range(0, 100)]
         public double Discount { get; set; }
 
         public int SalonId { get; set; }
@@ -27,6 +27,6 @@ namespace Salon.Data.Models
         [Timestamp]
         public byte[] RowVersion { get; set; }
 
-        public List<ProductWorker> SalonWorkers { get; set; }
+        public List<WorkerProduct> Workers { get; set; } = new List<WorkerProduct>();
     }
 }
